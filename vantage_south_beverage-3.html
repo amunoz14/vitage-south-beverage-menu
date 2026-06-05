@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vantage South — Beverage Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #12151f;
+  --surface: #1a1e2e;
+  --gold: #c49a3c;
+  --gold-light: #d9b86a;
+  --gold-dim: rgba(196,154,60,.18);
+  --cream: #e8e0d0;
+  --muted: #7a8099;
+  --rule: rgba(255,255,255,.08);
+  --text: #dde0e8;
+  --text-dim: #8a8fa8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { background:var(--bg); color:var(--text); font-family:'Jost',sans-serif; font-weight:300; min-height:100vh; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(18,21,31,.95); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 2.5rem; height:60px;
+}
+.nav-brand { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:300; letter-spacing:.28em; text-transform:uppercase; color:var(--gold-light); }
+.nav-links { display:flex; list-style:none; }
+.nav-links a { display:block; padding:.5rem .9rem; font-size:.6rem; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .2s; }
+.nav-links a:hover, .nav-links a.active { color:var(--gold-light); }
+.nav-tag { font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.2); }
+
+/* ── HERO ── */
+.hero { padding-top:60px; background:var(--bg); position:relative; overflow:hidden; min-height:280px; display:flex; align-items:flex-end; }
+.hero-glow { position:absolute; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(196,154,60,.1) 0%,transparent 70%); top:-100px; left:-80px; pointer-events:none; }
+.hero-glow2 { position:absolute; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle,rgba(42,49,80,.6) 0%,transparent 70%); bottom:-50px; right:10%; pointer-events:none; }
+.hero-grid { position:absolute; inset:0; background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px); background-size:60px 60px; mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.3) 40%,transparent); }
+.hero-content { position:relative; padding:3rem 2.5rem 2.8rem; max-width:960px; }
+.hero-eyebrow { font-size:.6rem; font-weight:500; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); margin-bottom:.8rem; }
+.hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,6vw,4.8rem); font-weight:300; line-height:.95; color:var(--cream); letter-spacing:.03em; }
+.hero-title em { font-style:italic; color:var(--gold-light); display:block; }
+.hero-rule { width:48px; height:1px; background:var(--gold); margin:1.2rem 0; }
+.hero-sub { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); font-weight:400; }
+
+/* ── SECTION TABS ── */
+.section-tabs { position:sticky; top:60px; z-index:50; background:var(--surface); border-bottom:1px solid var(--rule); display:flex; overflow-x:auto; padding:0 2.5rem; scrollbar-width:none; }
+.section-tabs::-webkit-scrollbar { display:none; }
+.section-tab { padding:.85rem 1.2rem; font-size:.6rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; background:none; border-top:none; border-left:none; border-right:none; text-decoration:none; display:block; flex-shrink:0; }
+.section-tab:hover { color:var(--cream); }
+.section-tab.active { color:var(--gold-light); border-bottom-color:var(--gold); }
+
+/* ── CONTENT ── */
+.content { max-width:920px; margin:0 auto; padding:0 2.5rem 5rem; }
+.menu-section { padding-top:3.5rem; }
+.menu-section + .menu-section { border-top:1px solid var(--rule); margin-top:3.5rem; }
+.section-header { margin-bottom:2rem; }
+.section-name { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--cream); letter-spacing:.06em; }
+.section-note { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.95rem; color:var(--text-dim); margin-top:.3rem; }
+.category { margin-bottom:2rem; }
+.category-label { font-size:.75rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); padding-bottom:.5rem; border-bottom:1px solid var(--gold-dim); margin-bottom:1rem; }
+
+/* ── ITEM GRID ── */
+.item-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+@media(max-width:600px){ .item-grid { grid-template-columns:1fr; } }
+
+/* ── DRINK CARD ── */
+.drink-item { padding:.85rem 1.2rem .85rem 0; border-bottom:1px solid var(--rule); }
+.drink-item:last-child { border-bottom:1px solid var(--rule); }
+
+.drink-top { display:flex; justify-content:space-between; align-items:baseline; gap:.5rem; margin-bottom:.3rem; }
+.drink-name { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:500; color:var(--cream); line-height:1.2; }
+.drink-price { font-family:'Jost',sans-serif; font-size:.78rem; font-weight:500; color:var(--gold-light); white-space:nowrap; flex-shrink:0; }
+
+/* ── AF TOGGLE ── */
+.drink-footer { display:flex; align-items:flex-start; justify-content:space-between; gap:.6rem; margin-top:.3rem; }
+.drink-desc { font-size:.78rem; color:var(--text-dim); line-height:1.55; flex:1; }
+.drink-desc.af-active { color:rgba(196,154,60,.75); }
+
+.af-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px 2px 5px;
+  border: 1px solid rgba(196,154,60,.25);
+  border-radius: 20px;
+  font-family: 'Jost', sans-serif;
+  font-size: .55rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(196,154,60,.5);
+  cursor: pointer;
+  background: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all .2s;
+  margin-top: 1px;
+  line-height: 1;
+  height: fit-content;
+}
+.af-toggle:hover { border-color:var(--gold); color:var(--gold); }
+.af-toggle.on { background:var(--gold-dim); border-color:var(--gold); color:var(--gold-light); }
+.af-toggle .af-dot { width:5px; height:5px; border-radius:50%; background:currentColor; flex-shrink:0; transition:background .2s; }
+
+/* ── SPIRITS ── */
+.spirit-category { margin-bottom:1.8rem; }
+.spirit-label { font-size:.75rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:.6rem; padding-bottom:.4rem; border-bottom:1px solid var(--gold-dim); }
+.spirit-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+@media(max-width:600px){ .spirit-grid { grid-template-columns:1fr; } }
+.spirit-item { display:flex; justify-content:space-between; align-items:baseline; padding:.55rem 1.2rem .55rem 0; border-bottom:1px solid rgba(255,255,255,.04); gap:.5rem; }
+.spirit-item:last-child { border-bottom:none; }
+.spirit-left { flex:1; }
+.spirit-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--cream); }
+.spirit-origin { font-size:.72rem; color:var(--text-dim); margin-top:1px; }
+.spirit-price { font-family:'Jost',sans-serif; font-size:.75rem; font-weight:500; color:var(--gold-light); white-space:nowrap; }
+
+/* ── WINE ── */
+.wine-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+@media(max-width:600px){ .wine-grid { grid-template-columns:1fr; } }
+.wine-item { display:flex; justify-content:space-between; align-items:baseline; padding:.55rem 1.2rem .55rem 0; border-bottom:1px solid rgba(255,255,255,.04); gap:.5rem; }
+.wine-item:last-child { border-bottom:none; }
+.wine-left { flex:1; }
+.wine-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--cream); }
+.wine-origin { font-size:.72rem; color:var(--text-dim); margin-top:1px; }
+.wine-price { font-family:'Jost',sans-serif; font-size:.75rem; font-weight:500; color:var(--gold-light); white-space:nowrap; text-align:right; }
+.wine-price .btl { font-weight:300; color:var(--text-dim); }
+
+/* ── BEER ── */
+.beer-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+@media(max-width:600px){ .beer-grid { grid-template-columns:1fr; } }
+.beer-item { display:flex; justify-content:space-between; align-items:baseline; padding:.6rem 1.2rem .6rem 0; border-bottom:1px solid rgba(255,255,255,.04); gap:.5rem; }
+.beer-item:last-child { border-bottom:none; }
+.beer-left { flex:1; }
+.beer-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--cream); }
+.beer-detail { font-size:.72rem; color:var(--text-dim); margin-top:1px; }
+.beer-price { font-family:'Jost',sans-serif; font-size:.75rem; font-weight:500; color:var(--gold-light); white-space:nowrap; }
+
+/* ── FOOTER ── */
+footer { background:rgba(0,0,0,.4); border-top:1px solid var(--rule); color:var(--text-dim); text-align:center; padding:2rem; font-size:.7rem; letter-spacing:.05em; line-height:1.9; }
+footer strong { color:var(--gold-light); font-weight:500; letter-spacing:.12em; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+.menu-section { animation:fadeUp .5s ease both; }
+.menu-section:nth-child(2){animation-delay:.08s}
+.menu-section:nth-child(3){animation-delay:.14s}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Vantage South</span>
+  <ul class="nav-links">
+    <li><a href="#cocktails" class="active">Cocktails</a></li>
+    <li><a href="#spirits">Spirits</a></li>
+    <li><a href="#wine">Wine</a></li>
+    <li><a href="#beer">Beer</a></li>
+  </ul>
+  <span class="nav-tag">Nexus at The 78</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Nexus at The 78 &nbsp;·&nbsp; Chicago, Illinois</div>
+    <h1 class="hero-title">Bar &amp; <em>Lounge</em></h1>
+    <div class="hero-rule"></div>
+    <div class="hero-sub">Mid-Day from 11:00 AM &nbsp;·&nbsp; Dinner Service 5:00 – 11:00 PM &nbsp;·&nbsp; Bar Open Daily</div>
+  </div>
+</div>
+
+<div class="section-tabs">
+  <a href="#cocktails" class="section-tab active">Cocktails</a>
+  <a href="#spirits" class="section-tab">Spirits</a>
+  <a href="#wine" class="section-tab">Wine</a>
+  <a href="#beer" class="section-tab">Beer</a>
+</div>
+
+<div class="content">
+
+<!-- ══ COCKTAILS ══ -->
+<section class="menu-section" id="cocktails">
+  <div class="section-header">
+    <h2 class="section-name">Cocktails</h2>
+    <div class="section-note">Tap <em>alcohol-free</em> on any cocktail to see the zero-proof build.</div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Signature Cocktails</div>
+    <div class="item-grid">
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">South Loop Mule</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Tito's Vodka · house ginger beer · fresh lime · mint" data-af="House ginger beer · fresh lime · mint · cucumber">Tito's Vodka · house ginger beer · fresh lime · mint</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Riverwalk Paloma</span><span class="drink-price">$17</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Don Julio Blanco · fresh grapefruit · lime · salted rim" data-af="Fresh grapefruit · lime · agave · salted rim · Fever-Tree sparkling">Don Julio Blanco · fresh grapefruit · lime · salted rim</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Smoked Citrus Margarita</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Casamigos Reposado · triple sec · smoked salt rim · fresh citrus" data-af="Smoked citrus shrub · fresh lime · agave · smoked salt rim · Fever-Tree soda">Casamigos Reposado · triple sec · smoked salt rim · fresh citrus</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Mango Mandarin Margarita</span><span class="drink-price">$19</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Casamigos Blanco · fresh mango purée · mandarin juice · triple sec · agave · Tajín-salt rim · fresh lime" data-af="Fresh mango purée · mandarin juice · agave · Tajín-salt rim · fresh lime · sparkling water">Casamigos Blanco · fresh mango purée · mandarin juice · triple sec · agave · Tajín-salt rim · fresh lime</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Gold Coast Gin Fizz</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Hendrick's Gin · fresh lemon · St-Germain elderflower · sparkling water" data-af="Seedlip Garden 108 · fresh lemon · St-Germain elderflower · sparkling water">Hendrick's Gin · fresh lemon · St-Germain elderflower · sparkling water</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Chipotle Paloma</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Lunazul Blanco · chipotle honey syrup · fresh grapefruit" data-af="Chipotle honey syrup · fresh grapefruit · lime · sparkling water">Lunazul Blanco · chipotle honey syrup · fresh grapefruit</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Summer Berry Spritz</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="St-Germain · seasonal berries · lemonade · Chandon Brut" data-af="St-Germain elderflower · seasonal berry purée · lemonade · Fever-Tree sparkling">St-Germain · seasonal berries · lemonade · Chandon Brut</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Skyline 360</span><span class="drink-price">$24</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Grey Goose · Veuve Clicquot · St-Germain · fresh citrus" data-af="St-Germain elderflower · fresh citrus · Fever-Tree sparkling · passionfruit syrup">Grey Goose · Veuve Clicquot · St-Germain · fresh citrus</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Riverfront Mule</span><span class="drink-price">$17</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Tito's Vodka · house ginger beer · fresh lime" data-af="House ginger beer · fresh lime · dash of Angostura bitters">Tito's Vodka · house ginger beer · fresh lime</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Charred Citrus Margarita</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Casamigos Blanco · charred lime juice · agave nectar" data-af="Charred lime juice · agave nectar · fresh orange · sparkling water">Casamigos Blanco · charred lime juice · agave nectar</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Blackberry Bourbon Smash</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Woodford Reserve · fresh blackberries · lemon · house simple syrup" data-af="Muddled fresh blackberries · lemon · house simple syrup · ginger beer · fresh mint">Woodford Reserve · fresh blackberries · lemon · house simple syrup</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">78 Embers Old Fashioned</span><span class="drink-price">$20</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Buffalo Trace Bourbon · demerara syrup · Angostura bitters · cedar smoke" data-af="Seedlip Spice 94 · demerara syrup · Angostura bitters · cedar smoke">Buffalo Trace Bourbon · demerara syrup · Angostura bitters · cedar smoke</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Beet &amp; Thyme Negroni</span><span class="drink-price">$20</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Hendrick's Gin · Campari · Carpano Antica · fresh thyme" data-af="Seedlip Spice · Lyre's Aperitif Rosso · Lyre's Vermouth · fresh thyme · orange peel">Hendrick's Gin · Campari · Carpano Antica · fresh thyme</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Cedar Smoke Manhattan</span><span class="drink-price">$20</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Bulleit Rye · Carpano Antica · Luxardo cherry · cedar-smoked ice" data-af="Seedlip Spice 94 · sweet grape reduction · Angostura bitters · Luxardo cherry · cedar smoke">Bulleit Rye · Carpano Antica · Luxardo cherry · cedar-smoked ice</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Espresso Martini</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Absolut Vanilla Vodka · Kahlua · cold brew concentrate" data-af="Cold brew concentrate · espresso syrup · vanilla oat milk · cream foam">Absolut Vanilla Vodka · Kahlua · cold brew concentrate</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Gold Coast Midnight</span><span class="drink-price">$22</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Hennessy VSOP · blackberry purée · dark chocolate bitters" data-af="Blackberry purée · dark chocolate bitters · cream · sparkling water">Hennessy VSOP · blackberry purée · dark chocolate bitters</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Classic Cocktails — Clear Spirits</div>
+    <div class="item-grid">
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Martini</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Hendrick's Gin or Grey Goose · dry vermouth · lemon twist or olive" data-af="Seedlip Garden 108 · blanc vermouth reduction · lemon twist or olive">Hendrick's Gin or Grey Goose · dry vermouth · lemon twist or olive</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Tom Collins</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Monkey 47 Gin · fresh lemon · house simple syrup · soda" data-af="Seedlip Garden 108 · fresh lemon · house simple syrup · soda">Monkey 47 Gin · fresh lemon · house simple syrup · soda</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Negroni</span><span class="drink-price">$17</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Hendrick's Gin · Campari · Carpano Antica · orange peel" data-af="Seedlip Spice · Lyre's Aperitif Rosso · Lyre's Vermouth · orange peel">Hendrick's Gin · Campari · Carpano Antica · orange peel</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Cosmopolitan</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Grey Goose · Cointreau · cranberry · fresh lime" data-af="Seedlip Spice 94 · Lyre's Triple Sec · cranberry · fresh lime">Grey Goose · Cointreau · cranberry · fresh lime</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Margarita</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Don Julio Blanco · fresh lime · agave nectar · salted rim" data-af="Fresh lime · agave nectar · salted rim · Fever-Tree soda">Don Julio Blanco · fresh lime · agave nectar · salted rim</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Paloma</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Casamigos Blanco · fresh grapefruit · lime · soda · salted rim" data-af="Fresh grapefruit · lime · agave · soda · salted rim">Casamigos Blanco · fresh grapefruit · lime · soda · salted rim</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Mojito</span><span class="drink-price">$15</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Bacardí Superior · fresh mint · lime · cane sugar · soda" data-af="Fresh mint · lime · cane sugar · soda">Bacardí Superior · fresh mint · lime · cane sugar · soda</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Aperol Spritz</span><span class="drink-price">$15</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Aperol · Chandon Brut · fresh orange · soda" data-af="Lyre's Aperitif Rosso · Fever-Tree sparkling · fresh orange · soda">Aperol · Chandon Brut · fresh orange · soda</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">French 75</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Gin · fresh lemon · simple syrup · Veuve Clicquot" data-af="Seedlip Garden 108 · fresh lemon · simple syrup · Fever-Tree sparkling">Gin · fresh lemon · simple syrup · Veuve Clicquot</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Kir Royale</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Chandon Brut · crème de cassis" data-af="Fever-Tree sparkling · black currant syrup · fresh lemon">Chandon Brut · crème de cassis</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Classic Cocktails — Aged Spirits</div>
+    <div class="item-grid">
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Old Fashioned</span><span class="drink-price">$16</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Woodford Reserve · Angostura bitters · demerara sugar · orange peel" data-af="Seedlip Spice 94 · Angostura bitters · demerara sugar · orange peel">Woodford Reserve · Angostura bitters · demerara sugar · orange peel</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Manhattan</span><span class="drink-price">$15</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Bulleit Rye · sweet vermouth · Angostura bitters · Luxardo cherry" data-af="Seedlip Spice 94 · sweet grape reduction · Angostura bitters · Luxardo cherry">Bulleit Rye · sweet vermouth · Angostura bitters · Luxardo cherry</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Whiskey Sour</span><span class="drink-price">$15</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Buffalo Trace · fresh lemon · house simple syrup · egg white foam" data-af="Seedlip Spice 94 · fresh lemon · house simple syrup · aquafaba foam">Buffalo Trace · fresh lemon · house simple syrup · egg white foam</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Paper Plane</span><span class="drink-price">$18</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Bulleit Bourbon · Aperol · Amaro Nonino · fresh lemon · equal parts" data-af="Seedlip Spice · Lyre's Aperitif Rosso · Lyre's Amaro · fresh lemon · equal parts">Bulleit Bourbon · Aperol · Amaro Nonino · fresh lemon · equal parts</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+      <div class="drink-item">
+        <div class="drink-top"><span class="drink-name">Dark &amp; Stormy</span><span class="drink-price">$17</span></div>
+        <div class="drink-footer">
+          <div class="drink-desc" data-std="Diplomatico Reserva dark rum · house ginger beer · fresh lime" data-af="House ginger beer · fresh lime · blackstrap molasses syrup · Angostura bitters">Diplomatico Reserva dark rum · house ginger beer · fresh lime</div>
+          <button class="af-toggle" onclick="toggleAF(this)"><span class="af-dot"></span>alcohol-free</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ SPIRITS ══ -->
+<section class="menu-section" id="spirits">
+  <div class="section-header"><h2 class="section-name">Spirits</h2></div>
+
+  <div class="spirit-category">
+    <div class="spirit-label">Vodka</div>
+    <div class="spirit-grid">
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Smirnoff</div><div class="spirit-origin">Well · Russia</div></div><span class="spirit-price">$8</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Absolut</div><div class="spirit-origin">Sweden</div></div><span class="spirit-price">$9</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Tito's Handmade</div><div class="spirit-origin">Austin, TX</div></div><span class="spirit-price">$13</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Grey Goose</div><div class="spirit-origin">France</div></div><span class="spirit-price">$16</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Belvedere</div><div class="spirit-origin">Poland</div></div><span class="spirit-price">$16</span></div>
+    </div>
+  </div>
+
+  <div class="spirit-category">
+    <div class="spirit-label">Gin</div>
+    <div class="spirit-grid">
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Seagram's Extra Dry</div><div class="spirit-origin">Well</div></div><span class="spirit-price">$8</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Tanqueray</div><div class="spirit-origin">Scotland</div></div><span class="spirit-price">$10</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Hendrick's</div><div class="spirit-origin">Scotland</div></div><span class="spirit-price">$17</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Monkey 47</div><div class="spirit-origin">Black Forest, Germany</div></div><span class="spirit-price">$18</span></div>
+    </div>
+  </div>
+
+  <div class="spirit-category">
+    <div class="spirit-label">Tequila &amp; Mezcal</div>
+    <div class="spirit-grid">
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Sauza Silver</div><div class="spirit-origin">Well · Mexico</div></div><span class="spirit-price">$8</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Lunazul Blanco</div><div class="spirit-origin">Mexico</div></div><span class="spirit-price">$9</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Don Julio Blanco</div><div class="spirit-origin">Jalisco, Mexico</div></div><span class="spirit-price">$17</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Casamigos Blanco</div><div class="spirit-origin">Jalisco, Mexico</div></div><span class="spirit-price">$18</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Del Maguey Vida Mezcal</div><div class="spirit-origin">Oaxaca, Mexico</div></div><span class="spirit-price">$19</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Clase Azul Reposado</div><div class="spirit-origin">Jalisco, Mexico</div></div><span class="spirit-price">$45</span></div>
+    </div>
+  </div>
+
+  <div class="spirit-category">
+    <div class="spirit-label">Rum</div>
+    <div class="spirit-grid">
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Bacardí Superior</div><div class="spirit-origin">Well · Puerto Rico</div></div><span class="spirit-price">$8</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Captain Morgan Spiced</div><div class="spirit-origin">Well</div></div><span class="spirit-price">$8</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Diplomatico Reserva</div><div class="spirit-origin">Venezuela</div></div><span class="spirit-price">$20</span></div>
+    </div>
+  </div>
+
+  <div class="spirit-category">
+    <div class="spirit-label">Whisky &amp; Bourbon</div>
+    <div class="spirit-grid">
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Jim Beam White</div><div class="spirit-origin">Bourbon · Clermont, KY</div></div><span class="spirit-price">$9</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Jack Daniel's No. 7</div><div class="spirit-origin">Tennessee Whiskey</div></div><span class="spirit-price">$10</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Buffalo Trace Bourbon</div><div class="spirit-origin">Frankfort, KY</div></div><span class="spirit-price">$16</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Bulleit Rye</div><div class="spirit-origin">Lawrenceburg, KY</div></div><span class="spirit-price">$17</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Woodford Reserve</div><div class="spirit-origin">Bourbon · Versailles, KY</div></div><span class="spirit-price">$18</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Blanton's Single Barrel</div><div class="spirit-origin">Bourbon · Frankfort, KY</div></div><span class="spirit-price">$30</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Jameson Irish</div><div class="spirit-origin">Irish Whiskey · Ireland</div></div><span class="spirit-price">$10</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Dewar's White Label</div><div class="spirit-origin">Blended Scotch</div></div><span class="spirit-price">$10</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Macallan 12</div><div class="spirit-origin">Single Malt Scotch · Speyside</div></div><span class="spirit-price">$24</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Lagavulin 16</div><div class="spirit-origin">Single Malt Scotch · Islay</div></div><span class="spirit-price">$28</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Macallan 18</div><div class="spirit-origin">Single Malt Scotch · Speyside</div></div><span class="spirit-price">$42</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Nikka Coffey Grain</div><div class="spirit-origin">Japanese Whisky</div></div><span class="spirit-price">$24</span></div>
+    </div>
+  </div>
+
+  <div class="spirit-category">
+    <div class="spirit-label">Cognac</div>
+    <div class="spirit-grid">
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Courvoisier VS</div><div class="spirit-origin">Cognac, France</div></div><span class="spirit-price">$13</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Hennessy VSOP</div><div class="spirit-origin">Cognac, France</div></div><span class="spirit-price">$22</span></div>
+      <div class="spirit-item"><div class="spirit-left"><div class="spirit-name">Rémy Martin XO</div><div class="spirit-origin">Cognac, France</div></div><span class="spirit-price">$38</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WINE ══ -->
+<section class="menu-section" id="wine">
+  <div class="section-header">
+    <h2 class="section-name">Wine</h2>
+    <div class="section-note">Prices shown glass / bottle where applicable.</div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Sparkling &amp; Champagne</div>
+    <div class="wine-grid">
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Chandon Brut</div><div class="wine-origin">California</div></div><div class="wine-price">$16 <span class="btl">/ $62</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Mionetto Prosecco Brut</div><div class="wine-origin">Veneto, Italy</div></div><div class="wine-price">$14 <span class="btl">/ $52</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Veuve Clicquot Yellow Label</div><div class="wine-origin">Champagne, France</div></div><div class="wine-price">$34 <span class="btl">/ $165</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Moët &amp; Chandon Imperial Brut</div><div class="wine-origin">Champagne, France</div></div><div class="wine-price"><span class="btl">Bottle</span> $145</div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Dom Pérignon</div><div class="wine-origin">Champagne, France</div></div><div class="wine-price"><span class="btl">Bottle</span> $450</div></div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">White Wine</div>
+    <div class="wine-grid">
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Chateau Ste. Michelle Riesling</div><div class="wine-origin">Columbia Valley, WA</div></div><div class="wine-price">$12 <span class="btl">/ $44</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Kim Crawford Sauvignon Blanc</div><div class="wine-origin">Marlborough, NZ</div></div><div class="wine-price">$14 <span class="btl">/ $52</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Maso Canali Pinot Grigio</div><div class="wine-origin">Trentino, Italy</div></div><div class="wine-price">$13 <span class="btl">/ $48</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Santa Margherita Pinot Grigio</div><div class="wine-origin">Alto Adige, Italy</div></div><div class="wine-price">$16 <span class="btl">/ $60</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Sonoma-Cutrer Chardonnay</div><div class="wine-origin">Sonoma Coast, CA</div></div><div class="wine-price">$17 <span class="btl">/ $65</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Dr. Loosen Riesling Spätlese</div><div class="wine-origin">Mosel, Germany</div></div><div class="wine-price">$18 <span class="btl">/ $68</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Cloudy Bay Sauvignon Blanc</div><div class="wine-origin">Marlborough, NZ</div></div><div class="wine-price">$19 <span class="btl">/ $74</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Merry Edwards Pinot Gris</div><div class="wine-origin">Russian River Valley, CA</div></div><div class="wine-price">$20 <span class="btl">/ $78</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Rombauer Chardonnay</div><div class="wine-origin">Carneros, CA</div></div><div class="wine-price">$20 <span class="btl">/ $78</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Cakebread Chardonnay</div><div class="wine-origin">Napa Valley, CA</div></div><div class="wine-price">$22 <span class="btl">/ $88</span></div></div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Rosé &amp; Red Wine</div>
+    <div class="wine-grid">
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Whispering Angel Rosé</div><div class="wine-origin">Provence, France</div></div><div class="wine-price">$18 <span class="btl">/ $72</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Josh Cellars Cabernet</div><div class="wine-origin">California</div></div><div class="wine-price">$13 <span class="btl">/ $48</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">A to Z Pinot Noir</div><div class="wine-origin">Willamette Valley, OR</div></div><div class="wine-price">$14 <span class="btl">/ $52</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Meiomi Pinot Noir</div><div class="wine-origin">California</div></div><div class="wine-price">$16 <span class="btl">/ $60</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Catena Zapata Malbec</div><div class="wine-origin">Mendoza, Argentina</div></div><div class="wine-price">$16 <span class="btl">/ $62</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Daou Cabernet Sauvignon</div><div class="wine-origin">Paso Robles, CA</div></div><div class="wine-price">$18 <span class="btl">/ $70</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">The Prisoner Red Blend</div><div class="wine-origin">Napa Valley, CA</div></div><div class="wine-price">$22 <span class="btl">/ $86</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Duckhorn Merlot</div><div class="wine-origin">Napa Valley, CA</div></div><div class="wine-price">$24 <span class="btl">/ $95</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Jordan Cabernet Sauvignon</div><div class="wine-origin">Alexander Valley, CA</div></div><div class="wine-price">$24 <span class="btl">/ $105</span></div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">La Rioja Alta Viña Ardanza</div><div class="wine-origin">Rioja, Spain</div></div><div class="wine-price"><span class="btl">Bottle</span> $98</div></div>
+      <div class="wine-item"><div class="wine-left"><div class="wine-name">Stag's Leap Petite Sirah</div><div class="wine-origin">Napa Valley, CA</div></div><div class="wine-price">$26 <span class="btl">/ $108</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BEER ══ -->
+<section class="menu-section" id="beer">
+  <div class="section-header"><h2 class="section-name">Beer</h2></div>
+
+  <div class="category">
+    <div class="category-label">Chicago &amp; Local — Draft</div>
+    <div class="beer-grid">
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Revolution Anti-Hero IPA</div><div class="beer-detail">Revolution Brewing · 6.7% ABV · bold pine, grapefruit &amp; tropical hops</div></div><span class="beer-price">$9</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Half Acre Daisy Cutter Pale Ale</div><div class="beer-detail">Half Acre Beer Co. · 5.2% ABV · bright citrus, floral &amp; clean finish</div></div><span class="beer-price">$9</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Goose Island 312 Urban Wheat</div><div class="beer-detail">Goose Island · 4.2% ABV · light &amp; refreshing with crisp citrus</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Maplewood Son of Juice IPA</div><div class="beer-detail">Maplewood Brewery · 6.3% ABV · hazy, tropical &amp; juicy</div></div><span class="beer-price">$9</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Off Color Troublesome Wheat</div><div class="beer-detail">Off Color Brewing · 4.4% ABV · tart wheat, light refreshing body</div></div><span class="beer-price">$9</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Empirical Andersonville Amber</div><div class="beer-detail">Empirical Brewing · 5.4% ABV · caramel malt &amp; smooth finish</div></div><span class="beer-price">$9</span></div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Domestic &amp; Import — Draft</div>
+    <div class="beer-grid">
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Midwest Lager</div><div class="beer-detail">House draft · clean, crisp &amp; easy drinking</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Guinness Draught</div><div class="beer-detail">Ireland · nitro-smooth · dark chocolate &amp; coffee</div></div><span class="beer-price">$10</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Stella Artois</div><div class="beer-detail">Belgium · crisp European lager</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Modelo Especial</div><div class="beer-detail">Mexico · light &amp; refreshing</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Pilsner Urquell</div><div class="beer-detail">Czech Republic · the original Pilsner</div></div><span class="beer-price">$9</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Blue Moon Belgian White</div><div class="beer-detail">Golden, CO · wheat ale with orange peel &amp; coriander</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Bud Light</div><div class="beer-detail">Domestic · light &amp; easy</div></div><span class="beer-price">$6</span></div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Bottles &amp; Cans</div>
+    <div class="beer-grid">
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Goose Island Bourbon County Stout</div><div class="beer-detail">Goose Island, Chicago</div></div><span class="beer-price">$14</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Spiteful GFY IPA</div><div class="beer-detail">Spiteful Brewing, Chicago</div></div><span class="beer-price">$9</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">BuckleDown Knuckle Buster</div><div class="beer-detail">BuckleDown Brewing, Lyons IL</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">La Chouffe Golden Ale</div><div class="beer-detail">Belgium · fruity, spiced, complex</div></div><span class="beer-price">$10</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Heineken</div><div class="beer-detail">Netherlands</div></div><span class="beer-price">$8</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Corona Extra</div><div class="beer-detail">Mexico</div></div><span class="beer-price">$7</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Miller Lite / Coors Light</div><div class="beer-detail">Domestic</div></div><span class="beer-price">$6</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Modelo Negra</div><div class="beer-detail">Mexico</div></div><span class="beer-price">$8</span></div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Zero-Proof Beer — 0.0% ABV</div>
+    <div class="beer-grid">
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Athletic Brewing Run Wild IPA</div><div class="beer-detail">Athletic Brewing Co. · hoppy, piney, citrus finish</div></div><span class="beer-price">$7</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Heineken 0.0</div><div class="beer-detail">Netherlands · balanced, malty, refreshing</div></div><span class="beer-price">$6</span></div>
+      <div class="beer-item"><div class="beer-left"><div class="beer-name">Clausthaler Original NA Lager</div><div class="beer-detail">Germany · clean, smooth, classic lager</div></div><span class="beer-price">$6</span></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <strong>Vantage South</strong> &nbsp;·&nbsp; Nexus at The 78, Chicago, Illinois<br>
+  Any cocktail can be prepared alcohol-free upon request. Must be 21+ to consume alcoholic beverages.<br>
+  Gratuity of 20% added to parties of 6 or more.
+</footer>
+
+<script>
+function toggleAF(btn) {
+  const desc = btn.closest('.drink-footer').querySelector('.drink-desc');
+  const isOn = btn.classList.contains('on');
+  if (isOn) {
+    desc.textContent = desc.dataset.std;
+    desc.classList.remove('af-active');
+    btn.classList.remove('on');
+  } else {
+    desc.textContent = desc.dataset.af;
+    desc.classList.add('af-active');
+    btn.classList.add('on');
+  }
+}
+
+const tabs = document.querySelectorAll('.section-tab');
+const navLinks = document.querySelectorAll('.nav-links a');
+const sections = ['cocktails','spirits','wine','beer'];
+
+function setActive(id) {
+  tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href')==='#'+id));
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href')==='#'+id));
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) setActive(e.target.id); });
+}, { rootMargin:'-25% 0px -65% 0px' });
+
+sections.forEach(id => { const el = document.getElementById(id); if(el) observer.observe(el); });
+</script>
+</body>
+</html>
